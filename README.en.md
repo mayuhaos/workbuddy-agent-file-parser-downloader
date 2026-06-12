@@ -12,7 +12,7 @@ English | [简体中文](README.md)
 
 `workbuddy-agent-file-parser-downloader` is a small automation tool for archiving WorkBuddy expert and expert-team agent bundles.
 
-It fetches the public `expert_center.json` manifest, parses each expert's category, Chinese / English names, and `plugin` identifier, downloads the corresponding `.tar.gz` bundle, and generates a structured Excel report with a summary dashboard.
+It reads the WorkBuddy expert marketplace manifest, parses each expert's category, Chinese / English names, and `plugin` identifier, downloads the corresponding `.tar.gz` bundle, and generates a structured Excel report with a summary dashboard.
 
 Use it to:
 
@@ -179,6 +179,7 @@ https://acc-1258344699.cos.accelerate.myqcloud.com/workbuddy/expert-marketplace/
 ## Recommended Repository Metadata
 
 - Repository name: `workbuddy-agent-file-parser-downloader`
+- Repository URL: `https://github.com/mayuhaos/workbuddy-agent-file-parser-downloader`
 - Display name: `WorkBuddy Agent File Parser Downloader`
 - Description: `解析 WorkBuddy 专家市场清单，并批量下载专家/专家团智能体压缩包。`
 - Language: Python
