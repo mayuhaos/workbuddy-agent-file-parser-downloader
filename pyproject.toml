@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "workbuddy-agent-file-parser-downloader"
-version = "0.1.0"
+version = "1.0.0"
 description = "Download WorkBuddy expert and expert-team bundles from the public expert marketplace manifest."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -15,9 +15,16 @@ dependencies = [
   "rich>=13.7",
 ]
 
+[project.optional-dependencies]
+gui = [
+  "customtkinter>=5.2",
+]
+build = [
+  "pyinstaller>=6",
+]
+
 [project.scripts]
 workbuddy-agent-file-parser-downloader = "workbuddy_agent_file_parser_downloader.cli:app"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-

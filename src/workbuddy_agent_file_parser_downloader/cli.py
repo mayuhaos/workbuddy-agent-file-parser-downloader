@@ -1,7 +1,5 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
-from datetime import datetime
-import logging
 from pathlib import Path
 from typing import Annotated
 
@@ -9,50 +7,13 @@ import typer
 from rich.console import Console
 from rich.progress import BarColumn, Progress, SpinnerColumn, TaskProgressColumn, TextColumn, TimeElapsedColumn
 
-from .downloader import DEFAULT_BUNDLE_BASE_URL, download_many
-from .excel_report import REPORT_FILENAME, write_report
-from .manifest import DEFAULT_MANIFEST_URL, fetch_manifest, parse_experts
+from .core import RunConfig, run_workflow
+from .downloader import DEFAULT_BUNDLE_BASE_URL
+from .manifest import DEFAULT_MANIFEST_URL
 
 
 app = typer.Typer(help="Run WorkBuddy expert and expert-team bundle downloads.", no_args_is_help=True)
 console = Console()
-
-
-def default_output_dir(now: datetime | None = None) -> Path:
-    current = now or datetime.now()
-    return Path(f"agent-outputs-{current:%Y-%m-%d-%H%M%S}")
-
-
-def _setup_logger(log_path: Path) -> logging.Logger:
-    log_path.parent.mkdir(parents=True, exist_ok=True)
-    logger = logging.getLogger("workbuddy_agent_file_parser_downloader")
-    logger.setLevel(logging.INFO)
-    logger.handlers.clear()
-
-    formatter = logging.Formatter("%(asctime)s | %(levelname)s | %(message)s")
-    file_handler = logging.FileHandler(log_path, encoding="utf-8")
-    file_handler.setFormatter(formatter)
-    logger.addHandler(file_handler)
-    return logger
-
-
-def _describe_entry(event: str, entry, url: str, target: Path, error: str = "") -> str:
-    parts = [
-        f"event={event}",
-        f"type={entry.type_label}",
-        f"category={entry.category_name}",
-        f"plugin={entry.plugin}",
-        f"display_zh={entry.display_name_zh}",
-        f"display_en={entry.display_name_en or '-'}",
-        f"profession_zh={entry.profession_zh or '-'}",
-        f"profession_en={entry.profession_en or '-'}",
-        f"file={target.name}",
-        f"path={target}",
-        f"url={url}",
-    ]
-    if error:
-        parts.append(f"error={error}")
-    return " | ".join(parts)
 
 
 @app.callback()
@@ -86,50 +47,37 @@ def run(
     log_file: Annotated[Path | None, typer.Option(help="Log file path. Defaults to <out-dir>/run.log.")] = None,
 ) -> None:
     """Fetch manifest, download bundles, and generate an xlsx report."""
-    out_dir = (out_dir or default_output_dir()).resolve()
-    log_path = (log_file or out_dir / "run.log").resolve()
-    logger = _setup_logger(log_path)
-    manifest_path = out_dir / "expert_center.json"
-
-    logger.info("run_start | started_at=%s | out_dir=%s", datetime.now().isoformat(timespec="seconds"), out_dir)
-    logger.info("manifest_fetch_start | url=%s | output=%s", manifest_url, manifest_path)
-    console.print(f"[bold]Manifest:[/bold] {manifest_url}")
-    manifest = fetch_manifest(manifest_url, manifest_path)
-    logger.info("manifest_fetch_success | output=%s", manifest_path)
-
-    entries = parse_experts(manifest)
-    if sample_agents is not None or sample_teams is not None:
-        agent_limit = sample_agents if sample_agents is not None else 0
-        team_limit = sample_teams if sample_teams is not None else 0
-        entries = [
-            *[entry for entry in entries if entry.expert_type == "agent"][: max(agent_limit, 0)],
-            *[entry for entry in entries if entry.expert_type == "team"][: max(team_limit, 0)],
-        ]
-    if limit is not None:
-        entries = entries[: max(limit, 0)]
-
-    console.print(f"[bold]Entries:[/bold] {len(entries)}")
-    logger.info(
-        "entries_loaded | count=%s | concurrency=%s | delay=%.2f-%.2fs | verify_existing=%s",
-        len(entries),
-        concurrency,
-        delay_min,
-        delay_max,
-        verify_existing,
+    config = RunConfig(
+        out_dir=out_dir,
+        manifest_url=manifest_url,
+        bundle_base_url=bundle_base_url,
+        concurrency=concurrency,
+        retries=retries,
+        delay_min=delay_min,
+        delay_max=delay_max,
+        verify_existing=verify_existing,
+        xlsx_template=xlsx_template,
+        limit=limit,
+        sample_agents=sample_agents,
+        sample_teams=sample_teams,
+        log_file=log_file,
     )
 
-    def log_event(event: str, entry, url: str, target: Path, error: str = "") -> None:
-        message = _describe_entry(event, entry, url, target, error)
-        logger.info(message)
-        color = {
-            "start": "cyan",
-            "success": "green",
-            "skipped": "yellow",
-            "retry": "magenta",
-            "failed": "red",
-        }.get(event, "white")
-        timestamp = datetime.now().isoformat(sep=" ", timespec="milliseconds")
-        console.print(f"[{color}]{timestamp}[/] {message}")
+    color_by_event = {
+        "manifest": "cyan",
+        "info": "white",
+        "start": "cyan",
+        "success": "green",
+        "skipped": "yellow",
+        "retry": "magenta",
+        "failed": "red",
+        "done": "green",
+    }
+    task_id: object | None = None
+
+    def on_event(event: str, message: str) -> None:
+        color = color_by_event.get(event, "white")
+        console.print(f"[{color}]{message}[/]")
 
     with Progress(
         SpinnerColumn(),
@@ -139,30 +87,36 @@ def run(
         TimeElapsedColumn(),
         console=console,
     ) as progress:
-        task_id = progress.add_task("Downloading bundles", total=len(entries))
-        results = download_many(
-            entries,
-            out_dir=out_dir,
-            bundle_base_url=bundle_base_url,
-            concurrency=concurrency,
-            retries=retries,
-            delay_min=delay_min,
-            delay_max=delay_max,
-            verify_existing=verify_existing,
-            log_callback=log_event,
-            progress=progress,
-            task_id=task_id,
+
+        def on_total(total: int) -> None:
+            nonlocal task_id
+            task_id = progress.add_task("Downloading bundles", total=total)
+
+        def on_progress(done: int, total: int) -> None:
+            if task_id is not None:
+                progress.update(task_id, completed=done, total=total)
+
+        summary = run_workflow(
+            config,
+            event_callback=on_event,
+            total_callback=on_total,
+            progress_callback=on_progress,
         )
 
-    report_path = out_dir / REPORT_FILENAME
-    write_report(results, report_path, xlsx_template)
+    console.print(f"[green]Done[/green] success/skipped={summary.success}, failed={summary.failed}")
+    console.print(f"Report: {summary.report_path}")
+    console.print(f"Log: {summary.log_path}")
+    if summary.failed:
+        console.print("[yellow]Some bundles failed. See the failure retry queue sheet in the report.[/yellow]")
 
-    success = sum(1 for item in results if item.success)
-    failed = len(results) - success
-    logger.info("run_done | success_or_skipped=%s | failed=%s | report=%s", success, failed, report_path)
-    console.print(f"[green]Done[/green] success/skipped={success}, failed={failed}")
-    console.print(f"Report: {report_path}")
-    console.print(f"Log: {log_path}")
-    if failed:
-        console.print("[yellow]Some bundles failed. See sheet: 澶辫触閲嶈窇闃熷垪[/yellow]")
 
+@app.command()
+def gui() -> None:
+    """Launch the CustomTkinter desktop app."""
+    try:
+        from .gui import run_gui
+    except ModuleNotFoundError as exc:
+        if exc.name == "customtkinter":
+            raise typer.BadParameter('GUI dependency is missing. Install with: python -m pip install -e ".[gui]"') from exc
+        raise
+    run_gui()

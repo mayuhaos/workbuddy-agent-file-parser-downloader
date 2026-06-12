@@ -10,7 +10,7 @@ English | [简体中文](README.md)
 
 ## Overview
 
-`workbuddy-agent-file-parser-downloader` is a small automation tool for archiving WorkBuddy expert and expert-team agent bundles. This avoids the need for manual "summoning" clicks and accounts for potential errors in machine vision recognition. If the project gains significant traction (stars), I plan to expand it into a GUI desktop application.
+`workbuddy-agent-file-parser-downloader` is a small automation tool for archiving WorkBuddy expert and expert-team agent bundles. This avoids the need for manual "summoning" clicks and accounts for potential errors in machine vision recognition. The project supports both command-line workflows and a desktop GUI.
 
 ![WorkBuddy Agent File Parser Downloader](https://raw.githubusercontent.com/mayuhaos/blog-images/notepix/assets/20260612T050146773Z.png)
 
@@ -32,6 +32,7 @@ Use it to:
 - Skip existing files by default to reduce duplicate requests
 - Continue on failures and write failed entries into a retry queue
 - Generate an Excel report with dashboard and detail sheets
+- Provide a desktop GUI for choosing an output folder, viewing live logs, and tracking download progress
 
 ## Output Structure
 
@@ -67,10 +68,14 @@ workbuddy-agent-file-parser-downloader/
 │  ├─ README.md
 │  └─ workbuddy_agent_file_parser_downloader/
 │     ├─ cli.py              # CLI entrypoint and options
+│     ├─ core.py             # Shared CLI/GUI workflow
+│     ├─ gui.py              # Desktop GUI
+│     ├─ gui_entry.py        # GUI application entrypoint
 │     ├─ manifest.py         # Manifest fetching and parsing
 │     ├─ downloader.py       # Bundle downloading and request throttling
 │     ├─ excel_report.py     # Excel dashboard and report generation
 │     └─ models.py           # Data models and filename rules
+├─ scripts/                  # Helper scripts
 ├─ README.md                 # Chinese README
 ├─ README.en.md              # English README
 ├─ pyproject.toml            # Python project metadata

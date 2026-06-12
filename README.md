@@ -10,7 +10,7 @@
 
 ## 简介
 
-`workbuddy-agent-file-parser-downloader` 是一个面向 WorkBuddy 专家/专家团资源归档的自动化工具。避免人工手动点击“召唤”以及机器视觉识别的容错。后续star较多的话我会扩展为 GUI 桌面工具。
+`workbuddy-agent-file-parser-downloader` 是一个面向 WorkBuddy 专家/专家团资源归档的自动化工具。避免人工手动点击“召唤”以及机器视觉识别的容错。项目同时支持命令行流程和 GUI 桌面操作。
 
 ![WorkBuddy 智能体文件解析下载](https://raw.githubusercontent.com/mayuhaos/blog-images/notepix/assets/20260612T050146773Z.png)
 
@@ -32,6 +32,7 @@
 - 已存在文件默认跳过，减少重复请求
 - 下载失败不中断，自动写入失败重跑队列
 - 生成 Excel 清单，包含统计看板和明细表
+- 提供 GUI 桌面界面，支持选择输出目录、查看实时日志和下载进度
 
 ## 输出结构
 
@@ -67,10 +68,14 @@ workbuddy-agent-file-parser-downloader/
 │  ├─ README.md
 │  └─ workbuddy_agent_file_parser_downloader/
 │     ├─ cli.py              # CLI 入口与参数处理
+│     ├─ core.py             # CLI/GUI 共用核心流程
+│     ├─ gui.py              # GUI 桌面界面
+│     ├─ gui_entry.py        # GUI 程序入口
 │     ├─ manifest.py         # 专家市场清单读取与解析
 │     ├─ downloader.py       # 智能体压缩包下载与限速
 │     ├─ excel_report.py     # Excel 看板与清单生成
 │     └─ models.py           # 数据模型与文件命名规则
+├─ scripts/                  # 辅助脚本
 ├─ README.md                 # 中文文档
 ├─ README.en.md              # English README
 ├─ pyproject.toml            # Python 项目配置

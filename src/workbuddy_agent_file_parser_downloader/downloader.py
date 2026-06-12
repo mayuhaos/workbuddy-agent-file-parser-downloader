@@ -21,6 +21,7 @@ DEFAULT_BUNDLE_BASE_URL = (
 
 
 LogCallback = Callable[[str, ExpertEntry, str, Path, str], None]
+ProgressCallback = Callable[[int, int], None]
 
 
 @dataclass
@@ -159,6 +160,7 @@ def download_many(
     log_callback: LogCallback | None = None,
     progress: object | None = None,
     task_id: object | None = None,
+    progress_callback: ProgressCallback | None = None,
 ) -> list[DownloadResult]:
     items = list(entries)
     results: list[DownloadResult] = []
@@ -182,9 +184,14 @@ def download_many(
             ): entry
             for entry in items
         }
+        completed = 0
+        total = len(items)
         for future in as_completed(futures):
             results.append(future.result())
+            completed += 1
             if progress is not None and task_id is not None:
                 progress.advance(task_id)
+            if progress_callback is not None:
+                progress_callback(completed, total)
     results.sort(key=lambda item: (item.entry.type_label, item.entry.category_name, item.entry.plugin))
     return results
