@@ -116,7 +116,7 @@ python -m workbuddy_sync sync --out-dir outputs-test-3 --sample-agents 2 --sampl
 
 ```powershell
 python -m workbuddy_sync sync `
-  --xlsx-template "C:\Users\EDY\Documents\workbuddy智能体获取\专家专家团压缩包清单.xlsx"
+  --xlsx-template "templates/expert_bundle_template.xlsx"
 ```
 
 ## Excel 清单

@@ -116,7 +116,7 @@ Reuse an existing Excel template for column widths:
 
 ```powershell
 python -m workbuddy_sync sync `
-  --xlsx-template "C:\Users\EDY\Documents\workbuddy智能体获取\专家专家团压缩包清单.xlsx"
+  --xlsx-template "templates/expert_bundle_template.xlsx"
 ```
 
 ## Excel Report
