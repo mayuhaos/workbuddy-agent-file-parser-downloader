@@ -61,11 +61,13 @@ Filename format:
 ### Windows
 
 ```powershell
-python -m venv .venv
+py -3 -m venv .venv
 .\.venv\Scripts\activate
 python -m pip install -e .
 python -m workbuddy_agent_file_parser_downloader run
 ```
+
+If the `python` command exits without output on Windows, use `py -3` to create the virtual environment. Windows may point `python` to the Microsoft Store app execution alias.
 
 ### macOS / Linux
 

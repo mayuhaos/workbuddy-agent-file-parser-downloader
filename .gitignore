@@ -6,3 +6,4 @@ build/
 *.egg-info/
 outputs/
 .pytest_cache/
+.idea/

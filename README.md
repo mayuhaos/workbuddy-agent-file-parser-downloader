@@ -61,11 +61,13 @@ outputs/
 ### Windows
 
 ```powershell
-python -m venv .venv
+py -3 -m venv .venv
 .\.venv\Scripts\activate
 python -m pip install -e .
 python -m workbuddy_agent_file_parser_downloader run
 ```
+
+如果 `python` 命令没有任何输出，请优先使用 `py -3` 创建虚拟环境。Windows 可能会把 `python` 指向 Microsoft Store 的占位程序。
 
 ### macOS / Linux
 
