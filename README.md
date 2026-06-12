@@ -10,7 +10,7 @@
 
 ## 简介
 
-`workbuddy-agent-file-parser-downloader` 是一个面向 WorkBuddy 专家/专家团资源归档的自动化工具。
+`workbuddy-agent-file-parser-downloader` 是一个面向 WorkBuddy 专家/专家团资源归档的自动化工具。避免人工手动点击“召唤”以及机器视觉识别的容错。后续star较多的话我会扩展为 GUI 桌面工具。
 
 ![WorkBuddy 智能体文件解析下载](https://raw.githubusercontent.com/mayuhaos/blog-images/notepix/assets/20260612T050146773Z.png)
 
@@ -21,7 +21,6 @@
 - 批量归档 WorkBuddy 专家/专家团智能体文件
 - 替代手动点击下载流程
 - 生成专家分类统计、下载结果和失败重跑清单
-- 后续扩展为 GUI 桌面工具
 
 ## 功能特性
 
@@ -55,6 +54,10 @@ outputs/
 专家-{分类中文名}-{plugin}.tar.gz
 专家团-{分类中文名}-{plugin}.tar.gz
 ```
+
+![xlsx导出](https://raw.githubusercontent.com/mayuhaos/blog-images/notepix/assets/20260612T061616783Z.png)
+
+![文件汇总](https://raw.githubusercontent.com/mayuhaos/blog-images/notepix/assets/20260612T061752448Z.png)
 
 ## 快速开始
 
@@ -194,7 +197,7 @@ https://acc-1258344699.cos.accelerate.myqcloud.com/workbuddy/expert-marketplace/
 
 ## 免责声明
 
-本项目仅用于学习、研究和个人数据归档自动化。请遵守目标服务的使用条款、robots/访问策略及适用法律法规。建议保持默认低频请求策略，避免对远程服务造成压力。
+本项目仅用于学习、研究和个人数据归档自动化。请遵守目标服务的使用条款、robots/访问策略及适用法律法规。建议保持默认低频请求策略，避免被远端refuse。
 
 ## License
 

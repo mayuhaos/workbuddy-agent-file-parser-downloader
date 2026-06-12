@@ -10,7 +10,7 @@ English | [简体中文](README.md)
 
 ## Overview
 
-`workbuddy-agent-file-parser-downloader` is a small automation tool for archiving WorkBuddy expert and expert-team agent bundles.
+`workbuddy-agent-file-parser-downloader` is a small automation tool for archiving WorkBuddy expert and expert-team agent bundles. This avoids the need for manual "summoning" clicks and accounts for potential errors in machine vision recognition. If the project gains significant traction (stars), I plan to expand it into a GUI desktop application.
 
 ![WorkBuddy Agent File Parser Downloader](https://raw.githubusercontent.com/mayuhaos/blog-images/notepix/assets/20260612T050146773Z.png)
 
@@ -21,7 +21,6 @@ Use it to:
 - Archive WorkBuddy expert and expert-team agent files in bulk
 - Replace repetitive manual click-to-download workflows
 - Generate category-level statistics and download status reports
-- Prepare a reusable core for a future GUI desktop app
 
 ## Features
 
@@ -55,6 +54,10 @@ Filename format:
 专家-{Chinese category name}-{plugin}.tar.gz
 专家团-{Chinese category name}-{plugin}.tar.gz
 ```
+
+![xlsx导出](https://raw.githubusercontent.com/mayuhaos/blog-images/notepix/assets/20260612T061616783Z.png)
+
+![文件汇总](https://raw.githubusercontent.com/mayuhaos/blog-images/notepix/assets/20260612T061752448Z.png)
 
 ## Quick Start
 
