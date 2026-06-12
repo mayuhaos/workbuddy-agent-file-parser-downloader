@@ -14,7 +14,7 @@ from .excel_report import REPORT_FILENAME, write_report
 from .manifest import DEFAULT_MANIFEST_URL, fetch_manifest, parse_experts
 
 
-app = typer.Typer(help="Sync WorkBuddy expert and expert-team bundles.", no_args_is_help=True)
+app = typer.Typer(help="Run WorkBuddy expert and expert-team bundle downloads.", no_args_is_help=True)
 console = Console()
 
 
@@ -56,7 +56,7 @@ def main() -> None:
 
 
 @app.command()
-def sync(
+def run(
     out_dir: Annotated[Path, typer.Option(help="Output directory.")] = Path("outputs"),
     manifest_url: Annotated[str, typer.Option(help="expert_center.json URL.")] = DEFAULT_MANIFEST_URL,
     bundle_base_url: Annotated[str, typer.Option(help="Base URL for bundle .tar.gz files.")] = DEFAULT_BUNDLE_BASE_URL,
@@ -75,15 +75,15 @@ def sync(
     limit: Annotated[int | None, typer.Option(help="Optional: process only the first N entries.")] = None,
     sample_agents: Annotated[int | None, typer.Option(help="Optional: process only the first N agent entries.")] = None,
     sample_teams: Annotated[int | None, typer.Option(help="Optional: process only the first N team entries.")] = None,
-    log_file: Annotated[Path | None, typer.Option(help="Log file path. Defaults to <out-dir>/sync.log.")] = None,
+    log_file: Annotated[Path | None, typer.Option(help="Log file path. Defaults to <out-dir>/run.log.")] = None,
 ) -> None:
     """Fetch manifest, download bundles, and generate an xlsx report."""
     out_dir = out_dir.resolve()
-    log_path = (log_file or out_dir / "sync.log").resolve()
+    log_path = (log_file or out_dir / "run.log").resolve()
     logger = _setup_logger(log_path)
     manifest_path = out_dir / "expert_center.json"
 
-    logger.info("sync_start | started_at=%s | out_dir=%s", datetime.now().isoformat(timespec="seconds"), out_dir)
+    logger.info("run_start | started_at=%s | out_dir=%s", datetime.now().isoformat(timespec="seconds"), out_dir)
     logger.info("manifest_fetch_start | url=%s | output=%s", manifest_url, manifest_path)
     console.print(f"[bold]Manifest:[/bold] {manifest_url}")
     manifest = fetch_manifest(manifest_url, manifest_path)
@@ -151,7 +151,7 @@ def sync(
 
     success = sum(1 for item in results if item.success)
     failed = len(results) - success
-    logger.info("sync_done | success_or_skipped=%s | failed=%s | report=%s", success, failed, report_path)
+    logger.info("run_done | success_or_skipped=%s | failed=%s | report=%s", success, failed, report_path)
     console.print(f"[green]Done[/green] success/skipped={success}, failed={failed}")
     console.print(f"Report: {report_path}")
     console.print(f"Log: {log_path}")

@@ -38,7 +38,7 @@
 ```text
 outputs/
 ├─ expert_center.json
-├─ sync.log
+├─ run.log
 ├─ 专家/
 │  ├─ 专家-内容创作-content-creator.tar.gz
 │  └─ 专家-项目质量-studio-operations-manager.tar.gz
@@ -83,7 +83,7 @@ run-test-3.bat
 python -m venv .venv
 .\.venv\Scripts\activate
 python -m pip install -e .
-python -m workbuddy_agent_file_parser_downloader sync
+python -m workbuddy_agent_file_parser_downloader run
 ```
 
 macOS / Linux：
@@ -92,13 +92,13 @@ macOS / Linux：
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install -e .
-python -m workbuddy_agent_file_parser_downloader sync
+python -m workbuddy_agent_file_parser_downloader run
 ```
 
 ## 常用参数
 
 ```powershell
-python -m workbuddy_agent_file_parser_downloader sync `
+python -m workbuddy_agent_file_parser_downloader run `
   --out-dir outputs `
   --concurrency 1 `
   --delay-min 1 `
@@ -109,13 +109,13 @@ python -m workbuddy_agent_file_parser_downloader sync `
 测试少量数据：
 
 ```powershell
-python -m workbuddy_agent_file_parser_downloader sync --out-dir outputs-test-3 --sample-agents 2 --sample-teams 1
+python -m workbuddy_agent_file_parser_downloader run --out-dir outputs-test-3 --sample-agents 2 --sample-teams 1
 ```
 
 复用已有 Excel 模板的列宽：
 
 ```powershell
-python -m workbuddy_agent_file_parser_downloader sync `
+python -m workbuddy_agent_file_parser_downloader run `
   --xlsx-template "templates/expert_bundle_template.xlsx"
 ```
 
@@ -141,7 +141,7 @@ outputs/专家专家团压缩包清单.xlsx
 每次运行都会生成详细日志：
 
 ```text
-outputs/sync.log
+outputs/run.log
 ```
 
 日志会记录：
@@ -169,7 +169,7 @@ outputs/sync.log
 也就是说，远程 bundle 请求会尽量保持约 1-2 秒一次，避免高频请求。已存在文件默认直接跳过，不额外请求远端；如果需要校验远端大小，可以使用：
 
 ```powershell
-python -m workbuddy_agent_file_parser_downloader sync --verify-existing
+python -m workbuddy_agent_file_parser_downloader run --verify-existing
 ```
 
 ## 默认接口

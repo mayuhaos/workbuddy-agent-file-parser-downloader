@@ -38,7 +38,7 @@ Use it to:
 ```text
 outputs/
 ├─ expert_center.json
-├─ sync.log
+├─ run.log
 ├─ 专家/
 │  ├─ 专家-内容创作-content-creator.tar.gz
 │  └─ 专家-项目质量-studio-operations-manager.tar.gz
@@ -59,7 +59,7 @@ Filename format:
 
 ### Windows One-Click Scripts
 
-Full sync:
+Full run:
 
 ```text
 run-full.bat
@@ -83,7 +83,7 @@ Notes:
 python -m venv .venv
 .\.venv\Scripts\activate
 python -m pip install -e .
-python -m workbuddy_agent_file_parser_downloader sync
+python -m workbuddy_agent_file_parser_downloader run
 ```
 
 macOS / Linux:
@@ -92,13 +92,13 @@ macOS / Linux:
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install -e .
-python -m workbuddy_agent_file_parser_downloader sync
+python -m workbuddy_agent_file_parser_downloader run
 ```
 
 ## Common Options
 
 ```powershell
-python -m workbuddy_agent_file_parser_downloader sync `
+python -m workbuddy_agent_file_parser_downloader run `
   --out-dir outputs `
   --concurrency 1 `
   --delay-min 1 `
@@ -109,13 +109,13 @@ python -m workbuddy_agent_file_parser_downloader sync `
 Small sample run:
 
 ```powershell
-python -m workbuddy_agent_file_parser_downloader sync --out-dir outputs-test-3 --sample-agents 2 --sample-teams 1
+python -m workbuddy_agent_file_parser_downloader run --out-dir outputs-test-3 --sample-agents 2 --sample-teams 1
 ```
 
 Reuse an existing Excel template for column widths:
 
 ```powershell
-python -m workbuddy_agent_file_parser_downloader sync `
+python -m workbuddy_agent_file_parser_downloader run `
   --xlsx-template "templates/expert_bundle_template.xlsx"
 ```
 
@@ -141,7 +141,7 @@ Sheets:
 Each run writes a detailed log:
 
 ```text
-outputs/sync.log
+outputs/run.log
 ```
 
 The log records timestamp, expert type, category, Chinese / English display names, Chinese / English profession names, `plugin`, output filename, local path, URL, and errors.
@@ -159,7 +159,7 @@ The default strategy is intentionally gentle:
 Remote bundle requests are kept roughly one request every 1-2 seconds. Existing files are skipped without a remote request by default. To verify remote file size before skipping, use:
 
 ```powershell
-python -m workbuddy_agent_file_parser_downloader sync --verify-existing
+python -m workbuddy_agent_file_parser_downloader run --verify-existing
 ```
 
 ## Default Endpoints
