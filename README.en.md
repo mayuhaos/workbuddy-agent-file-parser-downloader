@@ -36,7 +36,7 @@ Use it to:
 ## Output Structure
 
 ```text
-outputs/
+agent-outputs-2026-04-04-131211/
 ├─ expert_center.json
 ├─ run.log
 ├─ 专家/
@@ -59,6 +59,25 @@ Filename format:
 
 ![文件汇总](https://raw.githubusercontent.com/mayuhaos/blog-images/notepix/assets/20260612T061752448Z.png)
 
+## Repository Structure
+
+```text
+workbuddy-agent-file-parser-downloader/
+├─ src/
+│  ├─ README.md
+│  └─ workbuddy_agent_file_parser_downloader/
+│     ├─ cli.py              # CLI entrypoint and options
+│     ├─ manifest.py         # Manifest fetching and parsing
+│     ├─ downloader.py       # Bundle downloading and request throttling
+│     ├─ excel_report.py     # Excel dashboard and report generation
+│     └─ models.py           # Data models and filename rules
+├─ README.md                 # Chinese README
+├─ README.en.md              # English README
+├─ pyproject.toml            # Python project metadata
+├─ LICENSE                   # MIT License
+└─ .gitignore
+```
+
 ## Quick Start
 
 ### Windows
@@ -74,7 +93,7 @@ python -m pip install -e .
 python -m workbuddy_agent_file_parser_downloader run --out-dir outputs-test-3 --sample-agents 2 --sample-teams 1
 
 # Full run
-python -m workbuddy_agent_file_parser_downloader run --out-dir outputs
+python -m workbuddy_agent_file_parser_downloader run
 ```
 
 If the `python` command exits without output on Windows, use `py -3` to create the virtual environment. Windows may point `python` to the Microsoft Store app execution alias.
@@ -92,14 +111,15 @@ python -m pip install -e .
 python -m workbuddy_agent_file_parser_downloader run --out-dir outputs-test-3 --sample-agents 2 --sample-teams 1
 
 # Full run
-python -m workbuddy_agent_file_parser_downloader run --out-dir outputs
+python -m workbuddy_agent_file_parser_downloader run
 ```
 
 ## Common Options
 
+Without `--out-dir`, the tool creates an `agent-outputs-YYYY-MM-DD-HHMMSS` directory automatically.
+
 ```powershell
 python -m workbuddy_agent_file_parser_downloader run `
-  --out-dir outputs `
   --concurrency 1 `
   --delay-min 1 `
   --delay-max 2 `
@@ -124,24 +144,24 @@ python -m workbuddy_agent_file_parser_downloader run `
 The tool writes:
 
 ```text
-outputs/专家专家团压缩包清单.xlsx
+agent-outputs-2026-04-04-131211/专家专家团压缩包清单.xlsx
 ```
 
-Sheets:
+Up to 4 sheets:
 
 | Sheet | Description |
 |---|---|
 | `统计看板` | Total count, success count, failures, expert/team counts, category statistics |
-| `专家` | Expert details, filename, category, Chinese name, plugin, status, URL |
-| `专家团` | Expert-team details, filename, category, Chinese name, plugin, status, URL |
-| `失败重跑队列` | Failed entries, error messages, retry count |
+| `专家` | Expert details, filename, category, Chinese name, plugin, file size; error message appears only when needed |
+| `专家团` | Expert-team details, filename, category, Chinese name, plugin, file size; error message appears only when needed |
+| `失败重跑队列` | Generated only when failures exist; includes failed entries, source URL, error message, and retry count |
 
 ## Logs
 
 Each run writes a detailed log:
 
 ```text
-outputs/run.log
+agent-outputs-2026-04-04-131211/run.log
 ```
 
 The log records timestamp, expert type, category, Chinese / English display names, Chinese / English profession names, `plugin`, output filename, local path, URL, and errors.
@@ -192,3 +212,21 @@ This project is intended for learning, research, and personal archival automatio
 ## License
 
 [MIT](LICENSE)
+
+## Star History
+
+<a href="https://www.star-history.com/?repos=mayuhaos%2Fworkbuddy-agent-file-parser-downloader&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=mayuhaos/workbuddy-agent-file-parser-downloader&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=mayuhaos/workbuddy-agent-file-parser-downloader&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=mayuhaos/workbuddy-agent-file-parser-downloader&type=date&legend=top-left" />
+ </picture>
+</a>
+
+<div align="center">
+
+### Thanks for using WorkBuddy Agent File Parser Downloader
+
+If this project helps you, ⭐️  a star would mean a lot. Thank you!
+
+</div>

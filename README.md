@@ -36,7 +36,7 @@
 ## 输出结构
 
 ```text
-outputs/
+agent-outputs-2026-04-04-131211/
 ├─ expert_center.json
 ├─ run.log
 ├─ 专家/
@@ -59,6 +59,25 @@ outputs/
 
 ![文件汇总](https://raw.githubusercontent.com/mayuhaos/blog-images/notepix/assets/20260612T061752448Z.png)
 
+## 仓库结构
+
+```text
+workbuddy-agent-file-parser-downloader/
+├─ src/
+│  ├─ README.md
+│  └─ workbuddy_agent_file_parser_downloader/
+│     ├─ cli.py              # CLI 入口与参数处理
+│     ├─ manifest.py         # 专家市场清单读取与解析
+│     ├─ downloader.py       # 智能体压缩包下载与限速
+│     ├─ excel_report.py     # Excel 看板与清单生成
+│     └─ models.py           # 数据模型与文件命名规则
+├─ README.md                 # 中文文档
+├─ README.en.md              # English README
+├─ pyproject.toml            # Python 项目配置
+├─ LICENSE                   # MIT License
+└─ .gitignore
+```
+
 ## 快速开始
 
 ### Windows
@@ -74,7 +93,7 @@ python -m pip install -e .
 python -m workbuddy_agent_file_parser_downloader run --out-dir outputs-test-3 --sample-agents 2 --sample-teams 1
 
 # 全量运行
-python -m workbuddy_agent_file_parser_downloader run --out-dir outputs
+python -m workbuddy_agent_file_parser_downloader run
 ```
 
 如果 `python` 命令没有任何输出，请优先使用 `py -3` 创建虚拟环境。Windows 可能会把 `python` 指向 Microsoft Store 的占位程序。
@@ -92,14 +111,15 @@ python -m pip install -e .
 python -m workbuddy_agent_file_parser_downloader run --out-dir outputs-test-3 --sample-agents 2 --sample-teams 1
 
 # 全量运行
-python -m workbuddy_agent_file_parser_downloader run --out-dir outputs
+python -m workbuddy_agent_file_parser_downloader run
 ```
 
 ## 常用参数
 
+不传 `--out-dir` 时，会自动生成 `agent-outputs-YYYY-MM-DD-HHMMSS` 目录。
+
 ```powershell
 python -m workbuddy_agent_file_parser_downloader run `
-  --out-dir outputs `
   --concurrency 1 `
   --delay-min 1 `
   --delay-max 2 `
@@ -124,24 +144,24 @@ python -m workbuddy_agent_file_parser_downloader run `
 运行后会生成：
 
 ```text
-outputs/专家专家团压缩包清单.xlsx
+agent-outputs-2026-04-04-131211/专家专家团压缩包清单.xlsx
 ```
 
-包含 4 个 sheet：
+最多包含 4 个 sheet：
 
 | Sheet | 说明 |
 |---|---|
 | `统计看板` | 总数、成功数、失败数、专家/专家团数量、分类统计 |
-| `专家` | 专家明细、文件名、分类、中文名、plugin、下载状态、URL |
-| `专家团` | 专家团明细、文件名、分类、中文名、plugin、下载状态、URL |
-| `失败重跑队列` | 下载失败项、错误信息、重试次数 |
+| `专家` | 专家明细、文件名、分类、中文名、plugin、文件大小；有错误时才显示错误信息 |
+| `专家团` | 专家团明细、文件名、分类、中文名、plugin、文件大小；有错误时才显示错误信息 |
+| `失败重跑队列` | 仅在存在失败项时生成，包含失败项、来源 URL、错误信息、重试次数 |
 
 ## 日志
 
 每次运行都会生成详细日志：
 
 ```text
-outputs/run.log
+agent-outputs-2026-04-04-131211/run.log
 ```
 
 日志会记录：
@@ -202,3 +222,22 @@ https://acc-1258344699.cos.accelerate.myqcloud.com/workbuddy/expert-marketplace/
 ## License
 
 [MIT](LICENSE)
+
+## Star History
+
+<a href="https://www.star-history.com/?repos=mayuhaos%2Fworkbuddy-agent-file-parser-downloader&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=mayuhaos/workbuddy-agent-file-parser-downloader&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=mayuhaos/workbuddy-agent-file-parser-downloader&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=mayuhaos/workbuddy-agent-file-parser-downloader&type=date&legend=top-left" />
+ </picture>
+</a>
+
+
+<div align="center">
+
+### 💖 感谢使用 workbuddy-agent-file-parser-downloader
+
+如果这个项目对你有帮助，欢迎给我一个 ⭐️ Star！
+
+</div>

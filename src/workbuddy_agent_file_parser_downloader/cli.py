@@ -18,6 +18,11 @@ app = typer.Typer(help="Run WorkBuddy expert and expert-team bundle downloads.",
 console = Console()
 
 
+def default_output_dir(now: datetime | None = None) -> Path:
+    current = now or datetime.now()
+    return Path(f"agent-outputs-{current:%Y-%m-%d-%H%M%S}")
+
+
 def _setup_logger(log_path: Path) -> logging.Logger:
     log_path.parent.mkdir(parents=True, exist_ok=True)
     logger = logging.getLogger("workbuddy_agent_file_parser_downloader")
@@ -57,7 +62,10 @@ def main() -> None:
 
 @app.command()
 def run(
-    out_dir: Annotated[Path, typer.Option(help="Output directory.")] = Path("outputs"),
+    out_dir: Annotated[
+        Path | None,
+        typer.Option(help="Output directory. Defaults to agent-outputs-YYYY-MM-DD-HHMMSS."),
+    ] = None,
     manifest_url: Annotated[str, typer.Option(help="expert_center.json URL.")] = DEFAULT_MANIFEST_URL,
     bundle_base_url: Annotated[str, typer.Option(help="Base URL for bundle .tar.gz files.")] = DEFAULT_BUNDLE_BASE_URL,
     concurrency: Annotated[
@@ -78,7 +86,7 @@ def run(
     log_file: Annotated[Path | None, typer.Option(help="Log file path. Defaults to <out-dir>/run.log.")] = None,
 ) -> None:
     """Fetch manifest, download bundles, and generate an xlsx report."""
-    out_dir = out_dir.resolve()
+    out_dir = (out_dir or default_output_dir()).resolve()
     log_path = (log_file or out_dir / "run.log").resolve()
     logger = _setup_logger(log_path)
     manifest_path = out_dir / "expert_center.json"
