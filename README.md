@@ -61,10 +61,17 @@ outputs/
 ### Windows
 
 ```powershell
+cd workbuddy-agent-file-parser-downloader
 py -3 -m venv .venv
 .\.venv\Scripts\activate
+python -m pip install --upgrade pip
 python -m pip install -e .
-python -m workbuddy_agent_file_parser_downloader run
+
+# 测试 3 个包
+python -m workbuddy_agent_file_parser_downloader run --out-dir outputs-test-3 --sample-agents 2 --sample-teams 1
+
+# 全量运行
+python -m workbuddy_agent_file_parser_downloader run --out-dir outputs
 ```
 
 如果 `python` 命令没有任何输出，请优先使用 `py -3` 创建虚拟环境。Windows 可能会把 `python` 指向 Microsoft Store 的占位程序。
@@ -72,10 +79,17 @@ python -m workbuddy_agent_file_parser_downloader run
 ### macOS / Linux
 
 ```bash
-python -m venv .venv
+cd workbuddy-agent-file-parser-downloader
+python3 -m venv .venv
 source .venv/bin/activate
+python -m pip install --upgrade pip
 python -m pip install -e .
-python -m workbuddy_agent_file_parser_downloader run
+
+# 测试 3 个包
+python -m workbuddy_agent_file_parser_downloader run --out-dir outputs-test-3 --sample-agents 2 --sample-teams 1
+
+# 全量运行
+python -m workbuddy_agent_file_parser_downloader run --out-dir outputs
 ```
 
 ## 常用参数

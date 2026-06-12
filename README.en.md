@@ -61,10 +61,17 @@ Filename format:
 ### Windows
 
 ```powershell
+cd workbuddy-agent-file-parser-downloader
 py -3 -m venv .venv
 .\.venv\Scripts\activate
+python -m pip install --upgrade pip
 python -m pip install -e .
-python -m workbuddy_agent_file_parser_downloader run
+
+# Test 3 bundles
+python -m workbuddy_agent_file_parser_downloader run --out-dir outputs-test-3 --sample-agents 2 --sample-teams 1
+
+# Full run
+python -m workbuddy_agent_file_parser_downloader run --out-dir outputs
 ```
 
 If the `python` command exits without output on Windows, use `py -3` to create the virtual environment. Windows may point `python` to the Microsoft Store app execution alias.
@@ -72,10 +79,17 @@ If the `python` command exits without output on Windows, use `py -3` to create t
 ### macOS / Linux
 
 ```bash
-python -m venv .venv
+cd workbuddy-agent-file-parser-downloader
+python3 -m venv .venv
 source .venv/bin/activate
+python -m pip install --upgrade pip
 python -m pip install -e .
-python -m workbuddy_agent_file_parser_downloader run
+
+# Test 3 bundles
+python -m workbuddy_agent_file_parser_downloader run --out-dir outputs-test-3 --sample-agents 2 --sample-teams 1
+
+# Full run
+python -m workbuddy_agent_file_parser_downloader run --out-dir outputs
 ```
 
 ## Common Options
