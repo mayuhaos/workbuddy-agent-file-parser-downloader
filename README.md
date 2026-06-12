@@ -33,7 +33,6 @@
 - 已存在文件默认跳过，减少重复请求
 - 下载失败不中断，自动写入失败重跑队列
 - 生成 Excel 清单，包含统计看板和明细表
-- 提供 Windows 一键运行脚本
 
 ## 输出结构
 
@@ -59,27 +58,7 @@ outputs/
 
 ## 快速开始
 
-### Windows 一键运行
-
-全量下载：
-
-```text
-run-full.bat
-```
-
-测试 3 个包：
-
-```text
-run-test-3.bat
-```
-
-说明：
-
-- `run-full.bat` 会下载全部专家和专家团，输出到 `outputs/`
-- `run-test-3.bat` 只下载 `2 个专家 + 1 个专家团`，输出到 `outputs-test-3/`
-- 两个脚本都会自动创建 `.venv` 并安装依赖
-
-### 命令行运行
+### Windows
 
 ```powershell
 python -m venv .venv
@@ -88,7 +67,7 @@ python -m pip install -e .
 python -m workbuddy_agent_file_parser_downloader run
 ```
 
-macOS / Linux：
+### macOS / Linux
 
 ```bash
 python -m venv .venv

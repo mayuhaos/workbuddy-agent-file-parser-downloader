@@ -33,7 +33,6 @@ Use it to:
 - Skip existing files by default to reduce duplicate requests
 - Continue on failures and write failed entries into a retry queue
 - Generate an Excel report with dashboard and detail sheets
-- Include Windows one-click scripts
 
 ## Output Structure
 
@@ -59,27 +58,7 @@ Filename format:
 
 ## Quick Start
 
-### Windows One-Click Scripts
-
-Full run:
-
-```text
-run-full.bat
-```
-
-Test only 3 bundles:
-
-```text
-run-test-3.bat
-```
-
-Notes:
-
-- `run-full.bat` downloads all experts and expert teams to `outputs/`
-- `run-test-3.bat` downloads `2 experts + 1 expert team` to `outputs-test-3/`
-- Both scripts create `.venv` and install dependencies automatically
-
-### Command Line
+### Windows
 
 ```powershell
 python -m venv .venv
@@ -88,7 +67,7 @@ python -m pip install -e .
 python -m workbuddy_agent_file_parser_downloader run
 ```
 
-macOS / Linux:
+### macOS / Linux
 
 ```bash
 python -m venv .venv
