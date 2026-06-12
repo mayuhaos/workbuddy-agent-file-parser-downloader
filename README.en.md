@@ -83,7 +83,7 @@ Notes:
 python -m venv .venv
 .\.venv\Scripts\activate
 python -m pip install -e .
-python -m workbuddy_sync sync
+python -m workbuddy_agent_file_parser_downloader sync
 ```
 
 macOS / Linux:
@@ -92,13 +92,13 @@ macOS / Linux:
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install -e .
-python -m workbuddy_sync sync
+python -m workbuddy_agent_file_parser_downloader sync
 ```
 
 ## Common Options
 
 ```powershell
-python -m workbuddy_sync sync `
+python -m workbuddy_agent_file_parser_downloader sync `
   --out-dir outputs `
   --concurrency 1 `
   --delay-min 1 `
@@ -109,14 +109,14 @@ python -m workbuddy_sync sync `
 Small sample run:
 
 ```powershell
-python -m workbuddy_sync sync --out-dir outputs-test-3 --sample-agents 2 --sample-teams 1
+python -m workbuddy_agent_file_parser_downloader sync --out-dir outputs-test-3 --sample-agents 2 --sample-teams 1
 ```
 
 Reuse an existing Excel template for column widths:
 
 ```powershell
-python -m workbuddy_sync sync `
-  --xlsx-template "templates/expert_bundle_template.xlsx"
+python -m workbuddy_agent_file_parser_downloader sync `
+  --xlsx-template "C:\Users\EDY\Documents\workbuddy智能体获取\专家专家团压缩包清单.xlsx"
 ```
 
 ## Excel Report
@@ -159,7 +159,7 @@ The default strategy is intentionally gentle:
 Remote bundle requests are kept roughly one request every 1-2 seconds. Existing files are skipped without a remote request by default. To verify remote file size before skipping, use:
 
 ```powershell
-python -m workbuddy_sync sync --verify-existing
+python -m workbuddy_agent_file_parser_downloader sync --verify-existing
 ```
 
 ## Default Endpoints

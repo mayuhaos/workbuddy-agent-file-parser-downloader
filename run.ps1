@@ -15,7 +15,7 @@ Write-Host "Installing/updating dependencies..."
 & $VenvPython -m pip install -e .
 
 $argsList = @(
-    "-m", "workbuddy_sync", "sync",
+    "-m", "workbuddy_agent_file_parser_downloader", "sync",
     "--out-dir", $OutDir,
     "--concurrency", "1",
     "--delay-min", "1",
@@ -32,3 +32,4 @@ Write-Host "Starting WorkBuddy sync..."
 Write-Host ""
 Write-Host "Done. Outputs:"
 Write-Host $OutDir
+

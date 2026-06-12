@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from datetime import datetime
 import logging
@@ -20,7 +20,7 @@ console = Console()
 
 def _setup_logger(log_path: Path) -> logging.Logger:
     log_path.parent.mkdir(parents=True, exist_ok=True)
-    logger = logging.getLogger("workbuddy_sync")
+    logger = logging.getLogger("workbuddy_agent_file_parser_downloader")
     logger.setLevel(logging.INFO)
     logger.handlers.clear()
 
@@ -156,4 +156,5 @@ def sync(
     console.print(f"Report: {report_path}")
     console.print(f"Log: {log_path}")
     if failed:
-        console.print("[yellow]Some bundles failed. See sheet: 失败重跑队列[/yellow]")
+        console.print("[yellow]Some bundles failed. See sheet: 澶辫触閲嶈窇闃熷垪[/yellow]")
+

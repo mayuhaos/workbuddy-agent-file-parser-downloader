@@ -17,7 +17,7 @@ echo Installing/updating dependencies...
 if errorlevel 1 goto failed
 
 echo Starting FULL WorkBuddy sync...
-"%VENV_PY%" -m workbuddy_sync sync --out-dir "%OUT_DIR%" --concurrency 1 --delay-min 1 --delay-max 2
+"%VENV_PY%" -m workbuddy_agent_file_parser_downloader sync --out-dir "%OUT_DIR%" --concurrency 1 --delay-min 1 --delay-max 2
 if errorlevel 1 goto failed
 
 echo.
@@ -31,3 +31,4 @@ echo.
 echo Run failed. Please check the console output above.
 pause
 exit /b 1
+

@@ -83,7 +83,7 @@ run-test-3.bat
 python -m venv .venv
 .\.venv\Scripts\activate
 python -m pip install -e .
-python -m workbuddy_sync sync
+python -m workbuddy_agent_file_parser_downloader sync
 ```
 
 macOS / Linux：
@@ -92,13 +92,13 @@ macOS / Linux：
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install -e .
-python -m workbuddy_sync sync
+python -m workbuddy_agent_file_parser_downloader sync
 ```
 
 ## 常用参数
 
 ```powershell
-python -m workbuddy_sync sync `
+python -m workbuddy_agent_file_parser_downloader sync `
   --out-dir outputs `
   --concurrency 1 `
   --delay-min 1 `
@@ -109,14 +109,14 @@ python -m workbuddy_sync sync `
 测试少量数据：
 
 ```powershell
-python -m workbuddy_sync sync --out-dir outputs-test-3 --sample-agents 2 --sample-teams 1
+python -m workbuddy_agent_file_parser_downloader sync --out-dir outputs-test-3 --sample-agents 2 --sample-teams 1
 ```
 
 复用已有 Excel 模板的列宽：
 
 ```powershell
-python -m workbuddy_sync sync `
-  --xlsx-template "templates/expert_bundle_template.xlsx"
+python -m workbuddy_agent_file_parser_downloader sync `
+  --xlsx-template "C:\Users\EDY\Documents\workbuddy智能体获取\专家专家团压缩包清单.xlsx"
 ```
 
 ## Excel 清单
@@ -169,7 +169,7 @@ outputs/sync.log
 也就是说，远程 bundle 请求会尽量保持约 1-2 秒一次，避免高频请求。已存在文件默认直接跳过，不额外请求远端；如果需要校验远端大小，可以使用：
 
 ```powershell
-python -m workbuddy_sync sync --verify-existing
+python -m workbuddy_agent_file_parser_downloader sync --verify-existing
 ```
 
 ## 默认接口
