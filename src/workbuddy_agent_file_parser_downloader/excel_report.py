@@ -13,15 +13,7 @@ from .models import DownloadResult
 REPORT_FILENAME = "专家专家团压缩包清单.xlsx"
 
 
-HEADERS = ["压缩包名", "业务分类", "专家/专家团", "中文名", "plugin", "下载状态", "文件大小", "来源URL", "错误信息"]
-
-
-def _status_zh(status: str) -> str:
-    return {
-        "success": "成功",
-        "skipped": "已存在",
-        "failed": "失败",
-    }.get(status, status)
+DETAIL_HEADERS = ["压缩包名", "业务分类", "专家/专家团", "中文名", "plugin", "文件大小"]
 
 
 def _setup_sheet(ws) -> None:
@@ -65,22 +57,22 @@ def _apply_template_widths(wb: Workbook, template_path: Path | None) -> None:
 
 def _write_detail_sheet(wb: Workbook, title: str, results: list[DownloadResult]) -> None:
     ws = wb.create_sheet(title)
-    ws.append(HEADERS)
+    show_error = any(result.error for result in results)
+    headers = [*DETAIL_HEADERS, *(["错误信息"] if show_error else [])]
+    ws.append(headers)
     for result in results:
         entry = result.entry
-        ws.append(
-            [
-                entry.output_filename,
-                entry.category_name,
-                entry.type_label,
-                entry.profession_zh or entry.display_name_zh,
-                entry.plugin,
-                _status_zh(result.status),
-                result.file_size,
-                result.url,
-                result.error,
-            ]
-        )
+        row = [
+            entry.output_filename,
+            entry.category_name,
+            entry.type_label,
+            entry.profession_zh or entry.display_name_zh,
+            entry.plugin,
+            result.file_size,
+        ]
+        if show_error:
+            row.append(result.error)
+        ws.append(row)
     _setup_sheet(ws)
     _fit_columns(ws)
 
@@ -175,7 +167,9 @@ def write_report(
     _write_dashboard(wb, results)
     _write_detail_sheet(wb, "专家", [item for item in results if item.entry.type_label == "专家"])
     _write_detail_sheet(wb, "专家团", [item for item in results if item.entry.type_label == "专家团"])
-    _write_failure_sheet(wb, [item for item in results if not item.success])
+    failed = [item for item in results if not item.success]
+    if failed:
+        _write_failure_sheet(wb, failed)
     _apply_template_widths(wb, template_path)
     wb.save(output_path)
     return output_path
