@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime
 import logging
 from pathlib import Path
+from threading import Event
 from typing import Callable
 
 from .downloader import DEFAULT_BUNDLE_BASE_URL, download_many
@@ -15,6 +16,10 @@ from .models import DownloadResult, ExpertEntry
 RunEventCallback = Callable[[str, str], None]
 TotalCallback = Callable[[int], None]
 ProgressCallback = Callable[[int, int], None]
+
+
+class WorkflowCancelledError(RuntimeError):
+    """Raised when the running workflow is cancelled by the user."""
 
 
 @dataclass(frozen=True)
@@ -99,6 +104,11 @@ def _emit(callback: RunEventCallback | None, event: str, message: str) -> None:
     callback(event, f"{timestamp} {message}")
 
 
+def _ensure_not_cancelled(cancel_event: Event | None) -> None:
+    if cancel_event is not None and cancel_event.is_set():
+        raise WorkflowCancelledError("用户已停止本次下载。")
+
+
 def _apply_entry_limits(
     entries: list[ExpertEntry],
     limit: int | None,
@@ -122,6 +132,7 @@ def run_workflow(
     event_callback: RunEventCallback | None = None,
     total_callback: TotalCallback | None = None,
     progress_callback: ProgressCallback | None = None,
+    cancel_event: Event | None = None,
 ) -> RunSummary:
     out_dir = (config.out_dir or default_output_dir()).resolve()
     log_path = (config.log_file or out_dir / "run.log").resolve()
@@ -130,12 +141,14 @@ def run_workflow(
 
     logger.info("run_start | started_at=%s | out_dir=%s", datetime.now().isoformat(timespec="seconds"), out_dir)
     _emit(event_callback, "info", f"run_start | out_dir={out_dir}")
+    _ensure_not_cancelled(cancel_event)
 
     logger.info("manifest_fetch_start | url=%s | output=%s", config.manifest_url, manifest_path)
     _emit(event_callback, "manifest", f"manifest_fetch_start | url={config.manifest_url} | output={manifest_path}")
     manifest = fetch_manifest(config.manifest_url, manifest_path)
     logger.info("manifest_fetch_success | output=%s", manifest_path)
     _emit(event_callback, "manifest", f"manifest_fetch_success | output={manifest_path}")
+    _ensure_not_cancelled(cancel_event)
 
     entries = parse_experts(manifest)
     entries = _apply_entry_limits(entries, config.limit, config.sample_agents, config.sample_teams)
@@ -158,6 +171,7 @@ def run_workflow(
     )
     if total_callback:
         total_callback(len(entries))
+    _ensure_not_cancelled(cancel_event)
 
     def log_event(event: str, entry: ExpertEntry, url: str, target: Path, error: str = "") -> None:
         message = describe_download_event(event, entry, url, target, error)
@@ -175,7 +189,9 @@ def run_workflow(
         verify_existing=config.verify_existing,
         log_callback=log_event,
         progress_callback=progress_callback,
+        cancel_event=cancel_event,
     )
+    _ensure_not_cancelled(cancel_event)
 
     report_path = out_dir / REPORT_FILENAME
     write_report(results, report_path, config.xlsx_template)

@@ -28,7 +28,8 @@ $PyInstallerArgs = @(
     "--clean",
     "--onefile",
     "--windowed",
-    "--name", "WorkBuddy-Agent-File-Parser-Downloader",
+    "--name", "workbuddy-agent-file-parser-downloader-v1.0.0-windows-x64",
+    "--icon", (Join-Path $RepoRoot "assets\workbuddy-agent-file-parser-downloader.ico"),
     "--collect-all", "customtkinter",
     "src\workbuddy_agent_file_parser_downloader\gui_entry.py"
 )
@@ -40,4 +41,4 @@ if ($Python -eq "py") {
 }
 
 Write-Host ""
-Write-Host "Built: dist\WorkBuddy-Agent-File-Parser-Downloader.exe"
+Write-Host "Built: dist\workbuddy-agent-file-parser-downloader-v1.0.0-windows-x64.exe"
